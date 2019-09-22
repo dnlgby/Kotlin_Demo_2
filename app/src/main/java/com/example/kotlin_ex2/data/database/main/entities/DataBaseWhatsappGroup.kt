@@ -24,15 +24,3 @@ fun List<DataBaseWhatsappGroup>.asDomainModel(): List<WhatsappGroup> {
         )
     }
 }
-
-fun List<DataBaseWhatsappGroup>.asDataBaseModel(): List<DataBaseWhatsappGroup> {
-    return map {
-        DataBaseWhatsappGroup(
-            id = it.id,
-            name = it.name,
-            description = it.description,
-            inviteLink = it.inviteLink,
-            tags = it.tags
-        )
-    }
-}

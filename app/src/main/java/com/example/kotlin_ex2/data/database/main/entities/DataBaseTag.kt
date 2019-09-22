@@ -19,12 +19,3 @@ fun List<DataBaseTag>.asDomainModel(): List<Tag> {
         )
     }
 }
-
-fun List<Tag>.asDataBaseModel(): List<DataBaseTag> {
-    return map {
-        DataBaseTag(
-            id = it.id,
-            name = it.name
-        )
-    }
-}
