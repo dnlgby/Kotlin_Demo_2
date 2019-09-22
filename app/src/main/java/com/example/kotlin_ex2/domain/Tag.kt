@@ -1,4 +1,4 @@
-package com.example.kotlin_ex2.models
+package com.example.kotlin_ex2.domain
 
 data class Tag(
     val id: Long,
