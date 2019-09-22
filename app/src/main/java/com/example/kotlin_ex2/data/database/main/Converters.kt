@@ -12,6 +12,7 @@ object Converters {
     @TypeConverter
     @JvmStatic
     fun fromStringToListIntegers(string: String): List<Int> {
+        if (string.isBlank()) return emptyList()
         return string.split(',').map {
             it.trim().toInt()
         }

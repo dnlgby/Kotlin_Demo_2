@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@drawable/activity_main_top_drawable_bg"
-
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -46,6 +45,7 @@
         android:id="@+id/main_groupsRecycler"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
