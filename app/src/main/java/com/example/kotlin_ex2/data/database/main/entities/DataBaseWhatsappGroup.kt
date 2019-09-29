@@ -13,14 +13,20 @@ data class DataBaseWhatsappGroup(
     val tags: List<Int> = emptyList()
 )
 
+
+fun DataBaseWhatsappGroup.asDomainModel(): WhatsappGroup {
+
+    return WhatsappGroup(
+        id = id,
+        name = name,
+        description = description,
+        inviteLink = inviteLink,
+        tags = tags
+    )
+
+}
+
+
 fun List<DataBaseWhatsappGroup>.asDomainModel(): List<WhatsappGroup> {
-    return map {
-        WhatsappGroup(
-            id = it.id,
-            name = it.name,
-            description = it.description,
-            inviteLink = it.inviteLink,
-            tags = it.tags
-        )
-    }
+    return map { it.asDomainModel() }
 }

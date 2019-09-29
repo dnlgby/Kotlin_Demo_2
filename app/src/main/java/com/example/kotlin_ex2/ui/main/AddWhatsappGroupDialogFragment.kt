@@ -16,7 +16,6 @@ class AddWhatsappGroupDialogFragment : DialogFragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,13 +24,11 @@ class AddWhatsappGroupDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.add_whatsappgroup_dialog_fragment, container, false)
     }
 
-
     override fun onResume() {
         // Sets the height and the width of the DialogFragment
         val width = 1000
         val height = 700
         dialog!!.window!!.setLayout(width, height)
-
         super.onResume()
     }
 }

@@ -14,6 +14,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     companion object {
         const val LIST_SPACING = 20
+        const val ADD_WHATSAPP_GROUP_DIALOG_TAG =
+            "com.example.kotlin_ex2.ui.main.AddWhatsappGroupDialogFragment"
     }
 
     @Inject
@@ -30,15 +32,16 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViewModel()
         initUi()
-        mainViewModel.testb()
     }
 
     private fun initViewModel() {
+
         mainViewModel.whatsappGroupsLiveData.observe(this, Observer {
             mainListAdapter.submitList(it)
-            for (i in it) {
-                println(i)
-            }
+        })
+
+        mainViewModel.networkStateLiveData.observe(this, Observer {
+            mainListAdapter.setRequestStatus(it)
         })
     }
 
@@ -57,12 +60,12 @@ class MainActivity : DaggerAppCompatActivity() {
                     AddWhatsappGroupDialogFragment.getInstance()
                 dialog.show(
                     supportFragmentManager,
-                    "TEST"
+                    ADD_WHATSAPP_GROUP_DIALOG_TAG
                 )
             }
         }
 
-        mainListAdapter = MainRecyclerAdapter()
+        mainListAdapter = MainRecyclerAdapter(retryCallback = { mainViewModel.retryFetch() })
         main_groupsRecycler.apply {
             addItemDecoration(
                 MainListItemDecoration(LIST_SPACING)

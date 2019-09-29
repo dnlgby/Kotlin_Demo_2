@@ -26,6 +26,7 @@ class MainModule {
         return Room
             .databaseBuilder(app, MainDataBase::class.java, DB_NAME)
             .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
             .build()
     }
 
