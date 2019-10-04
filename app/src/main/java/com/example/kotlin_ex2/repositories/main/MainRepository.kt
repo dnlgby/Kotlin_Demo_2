@@ -22,7 +22,6 @@ class MainRepository @Inject constructor(
     private val repositoryJob = Job()
     private val repositoryScope = CoroutineScope(Main + repositoryJob)
 
-
     companion object {
         const val WHATSAPP_GROUP_PAGE_SIZE = 6
         const val WHATSAPP_GROUP_LIST_MAX_SIZE = 200

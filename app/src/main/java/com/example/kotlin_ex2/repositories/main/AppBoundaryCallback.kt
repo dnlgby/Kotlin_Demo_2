@@ -41,7 +41,8 @@ class AppBoundaryCallback(
                 _networkStatus.value = RequestStatus.succeed()
                 currentPage++
                 noMoreResults = networkResult.next.isNullOrBlank()
-            } catch (t: Throwable) {
+            } catch (t: Exception) {
+                t.printStackTrace()
                 if (noMoreResults) _networkStatus.postValue(RequestStatus.noMore())
                 else _networkStatus.postValue(RequestStatus.failed(t.message!!))
             }

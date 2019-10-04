@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.kotlin_ex2.R
+import kotlinx.android.synthetic.main.add_whatsappgroup_dialog_fragment.view.*
 
 class AddWhatsappGroupDialogFragment : DialogFragment() {
-
 
     companion object {
         fun getInstance(): AddWhatsappGroupDialogFragment {
@@ -24,11 +24,15 @@ class AddWhatsappGroupDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.add_whatsappgroup_dialog_fragment, container, false)
     }
 
-    override fun onResume() {
-        // Sets the height and the width of the DialogFragment
-        val width = 1000
-        val height = 700
-        dialog!!.window!!.setLayout(width, height)
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        childFragmentManager.beginTransaction()
+            .replace(
+                R.id.main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder,
+                TagFilterFragment()
+            )
+            .commit()
+        view.main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder
+        super.onViewCreated(view, savedInstanceState)
     }
+
 }

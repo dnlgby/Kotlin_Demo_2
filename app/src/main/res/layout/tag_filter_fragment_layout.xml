@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_TagFilterFragmentRootGl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
+    android:rowCount="3"
+    android:useDefaultMargins="true">
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        android:layout_marginRight="15dp"
+        app:off_drawable="@drawable/icon_family_dis"
+        app:on_drawable="@drawable/icon_family_ena" />
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        android:layout_marginRight="15dp"
+        app:off_drawable="@drawable/icon_parenting_dis"
+        app:on_drawable="@drawable/icon_parenting_ena" />
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        android:layout_marginRight="15dp"
+        app:off_drawable="@drawable/icon_funny_dis"
+        app:on_drawable="@drawable/icon_funny_ena" />
+
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        app:off_drawable="@drawable/icon_food_dis"
+        app:on_drawable="@drawable/icon_food_ena" />
+
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        app:off_drawable="@drawable/icon_dating_dis"
+        app:on_drawable="@drawable/icon_dating_ena" />
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        app:off_drawable="@drawable/icon_travel_dis"
+        app:on_drawable="@drawable/icon_travel_ena" />
+
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        app:off_drawable="@drawable/icon_sex_dis"
+        app:on_drawable="@drawable/icon_sex_ena" />
+
+
+    <com.example.kotlin_ex2.ui.main.views.ToggleView
+        android:layout_width="@dimen/tag_filter_view_icon_size"
+        android:layout_height="@dimen/tag_filter_view_icon_size"
+        app:off_drawable="@drawable/icon_talking_dis"
+        app:on_drawable="@drawable/icon_talking_ena" />
+
+</GridLayout>
+

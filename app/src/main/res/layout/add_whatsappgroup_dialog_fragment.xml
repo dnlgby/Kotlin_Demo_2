@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="15dp"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/main_AddWhatsappGroupDialogFragmentGroupNameEt"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:hint="Group name..."
+        android:maxWidth="250dp"
+        android:maxLength="20"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/main_AddWhatsappGroupDialogFragmentGroupDescriptionEt"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:hint="Group description..."
+        android:maxWidth="250dp"
+        android:maxLength="40"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogFragmentGroupNameEt" />
@@ -28,20 +39,27 @@
 
     <EditText
         android:id="@+id/main_AddWhatsappGroupDialogFragmentGroupInviteLinkEt"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:hint="Group Invite link..."
+        android:maxWidth="250dp"
+        android:maxLength="40"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogFragmentGroupDescriptionEt" />
 
-    <com.example.kotlin_ex2.ui.main.views.ToggleView
-        android:id="@+id/main_AddWhatsappGroupDialogFragmentFilterView"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <FrameLayout
+        android:id="@+id/main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogFragmentGroupInviteLinkEt" />
 
 
@@ -49,22 +67,26 @@
         android:id="@+id/main_AddWhatsappGroupDialogFragmentGroupCancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/main_AddWhatsappGroupDialogFragmentGroupOkBtn"
-        app:layout_constraintTop_toBottomOf="@+id/main_AddWhatsappGroupDialogFragmentFilterView" />
+        app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder" />
 
     <Button
         android:id="@+id/main_AddWhatsappGroupDialogFragmentGroupOkBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:text="Ok"
-
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/main_AddWhatsappGroupDialogFragmentGroupCancelBtn"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogFragmentFilterView" />
+        app:layout_constraintTop_toBottomOf="@id/main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

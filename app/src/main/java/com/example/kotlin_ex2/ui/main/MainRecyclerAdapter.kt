@@ -1,5 +1,6 @@
 package com.example.kotlin_ex2.ui.main
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,14 +41,17 @@ class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
         val hadExtraRow = hasExtraRow()
         this.requestStatus = newRequestStatus
         val hasExtraRow = hasExtraRow()
+        Log.d("TEXTXXY", "$hasExtraRow $hadExtraRow")
         if (hadExtraRow != hasExtraRow) {
             if (hadExtraRow) {
                 notifyItemRemoved(super.getItemCount())
             } else {
                 notifyItemInserted(super.getItemCount())
             }
-        } else if (hasExtraRow && previousState != newRequestStatus) {
-            notifyItemChanged(itemCount)
+        } else if (hasExtraRow) {// && previousState != newRequestStatus) {
+            Log.d("TEXTXXY", "notifyItemChanged")
+
+            notifyItemChanged(itemCount - 1)
         }
     }
 
@@ -75,7 +79,12 @@ class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             GROUP_VIEWTYPE -> (holder as MainViewHolder).bind(getItem(position))
-            NETWORKSTATUS_VIEWTYPE -> (holder as NetworkStatusViewHolder).bind(requestStatus)
+            NETWORKSTATUS_VIEWTYPE -> {
+
+                (holder as NetworkStatusViewHolder).bind(requestStatus)
+                Log.d("TESTX", "NEW ONE WITH STATUS=${requestStatus?.status}")
+
+            }
         }
     }
 
