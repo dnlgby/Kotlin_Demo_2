@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kotlin_ex2</string>
+    <string name="add_whatsappgroup_dialog_select_tags_text"><u>Tags</u></string>
 </resources>

@@ -4,17 +4,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.kotlin_ex2.R
+import com.example.kotlin_ex2.common.AppAnimations
+import com.example.kotlin_ex2.domain.WhatsappGroup
 import kotlinx.android.synthetic.main.add_whatsappgroup_dialog_fragment.view.*
 
-class AddWhatsappGroupDialogFragment : DialogFragment() {
+class AddWhatsappGroupDialogFragment : DialogFragment {
+
 
     companion object {
-        fun getInstance(): AddWhatsappGroupDialogFragment {
-            return AddWhatsappGroupDialogFragment()
+        const val SCALE_DOWN_ANIMATION_DURATION = 300L
+        const val SCALE_DOWN_ANIMATION_MIN = 0.5f
+        const val SCALE_DOWN_ANIMATION_MAX = 1.0f
+        fun getInstance(callbacks: AddWhatsappGroupDialogCallbacks): AddWhatsappGroupDialogFragment {
+            return AddWhatsappGroupDialogFragment(callbacks)
         }
     }
+
+    private lateinit var dialogView: View
+    private var callbacks: AddWhatsappGroupDialogCallbacks
+    private var z = false
+
+    constructor(callbacks: AddWhatsappGroupDialogCallbacks) {
+        this.callbacks = callbacks
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,14 +42,143 @@ class AddWhatsappGroupDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        childFragmentManager.beginTransaction()
-            .replace(
-                R.id.main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder,
-                TagFilterFragment()
-            )
-            .commit()
-        view.main_AddWhatsappGroupDialogTagFilterFragmentPlaceHolder
         super.onViewCreated(view, savedInstanceState)
+        dialogView = view
+        setTagFilterViewItems()
+        setListeners()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val decorView = dialog!!.window!!.decorView
+        AppAnimations.ScalingAnimations.scaleDown(
+            decorView,
+            SCALE_DOWN_ANIMATION_MIN,
+            SCALE_DOWN_ANIMATION_MAX,
+            SCALE_DOWN_ANIMATION_DURATION
+        )
+    }
+
+    private fun setTagFilterViewItems() {
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            1,
+            R.drawable.icon_dating_dis, R.drawable.icon_dating_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            2,
+            R.drawable.icon_family_dis, R.drawable.icon_family_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            3,
+            R.drawable.icon_funny_dis, R.drawable.icon_funny_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            4,
+            R.drawable.icon_parenting_dis, R.drawable.icon_parenting_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            5,
+            R.drawable.icon_travel_dis, R.drawable.icon_travel_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            6,
+            R.drawable.icon_sex_dis, R.drawable.icon_sex_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            7,
+            R.drawable.icon_talking_dis, R.drawable.icon_talking_ena
+        )
+
+        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+            8,
+            R.drawable.icon_food_dis, R.drawable.icon_food_ena
+        )
+    }
+
+    private fun setListeners() {
+        dialogView.main_AddGroupDialogGroupAddBtn.setOnClickListener {
+            val group = validateInput()
+            if (group != null) callbacks.groupAdded(group)
+        }
+
+        dialogView.main_AddGroupDialogGroupCancelBtn.setOnClickListener {
+            dismiss()
+        }
+    }
+
+    private fun validateInput(): WhatsappGroup? {
+        fun validateField(editText: EditText, name: String): String? {
+            val value = editText.text.toString().trim()
+            if (value.isBlank()) {
+                editText.error = "$name most be specified!"
+                return null
+            }
+            return value
+        }
+
+        fun validateGroupTags(): List<Int>? {
+            val groupTags = dialogView.main_AddGroupDialogTagFilterView.getEnabledItemIds()
+            if (groupTags.isEmpty()) {
+                val animShake = AnimationUtils.loadAnimation(context, R.anim.shake_animation)
+                dialogView.main_AddGroupDialogTagFilterView.startAnimation(animShake)
+                return null
+            }
+            return groupTags
+        }
+
+        val groupName = validateField(dialogView.main_AddGroupDlgGroupNameEt, "Group name")
+        val groupDescription =
+            validateField(dialogView.main_AddGroupDlgGroupDescriptionEt, "Group Description")
+        val groupInviteLink =
+            validateField(dialogView.main_AddGroupDlgGroupInviteLinkEt, "Group invite link")
+        val groupTags = validateGroupTags()
+
+        if (groupName.isNullOrBlank() ||
+            groupDescription.isNullOrBlank() ||
+            groupInviteLink.isNullOrBlank() ||
+            groupTags.isNullOrEmpty()
+        )
+            return null
+
+        return WhatsappGroup(
+            name = groupName,
+            description = groupDescription,
+            inviteLink = groupInviteLink,
+            tags = groupTags
+        )
+    }
+
+    fun actionInProgress() {
+        toggleViews(false)
+        dialogView.main_AddGroupDlgProgressBar.visibility = View.VISIBLE
+    }
+
+    fun actionFailure() {
+        toggleViews(true)
+        dialogView.main_AddGroupDlgProgressBar.visibility = View.GONE
+    }
+
+    fun actionSucceed() {
+        dismiss()
+    }
+
+    private fun toggleViews(toggle: Boolean) {
+        dialogView.main_AddGroupDlgGroupNameEt.isEnabled = toggle
+        dialogView.main_AddGroupDlgGroupDescriptionEt.isEnabled = toggle
+        dialogView.main_AddGroupDlgGroupInviteLinkEt.isEnabled = toggle
+        dialogView.main_AddGroupDialogTagFilterView.toggleView(toggle)
+        dialogView.main_AddGroupDialogGroupAddBtn.isEnabled = toggle
+        dialogView.main_AddGroupDialogGroupCancelBtn.isEnabled = toggle
+    }
+
+    interface AddWhatsappGroupDialogCallbacks {
+        fun groupAdded(group: WhatsappGroup)
     }
 
 }

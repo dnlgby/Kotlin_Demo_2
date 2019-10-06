@@ -12,6 +12,7 @@ import com.example.kotlin_ex2.network.main.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
 class AppBoundaryCallback(
     private val getPage: suspend (pageNumber: Int) -> ApiResponseListModel<NetworkWhatsappGroup>,
     private val insertPage: suspend (items: List<DataBaseWhatsappGroup>) -> Unit,

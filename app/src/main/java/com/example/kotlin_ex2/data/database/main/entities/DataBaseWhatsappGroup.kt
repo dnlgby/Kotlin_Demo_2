@@ -6,16 +6,14 @@ import com.example.kotlin_ex2.domain.WhatsappGroup
 
 @Entity(tableName = "whatsapp_group_table")
 data class DataBaseWhatsappGroup(
-    @PrimaryKey val id: String,
+    @PrimaryKey val id: Long,
     val name: String,
     val description: String,
     val inviteLink: String,
     val tags: List<Int> = emptyList()
 )
 
-
 fun DataBaseWhatsappGroup.asDomainModel(): WhatsappGroup {
-
     return WhatsappGroup(
         id = id,
         name = name,
@@ -23,10 +21,4 @@ fun DataBaseWhatsappGroup.asDomainModel(): WhatsappGroup {
         inviteLink = inviteLink,
         tags = tags
     )
-
-}
-
-
-fun List<DataBaseWhatsappGroup>.asDomainModel(): List<WhatsappGroup> {
-    return map { it.asDomainModel() }
 }

@@ -5,6 +5,8 @@ import androidx.paging.toLiveData
 import com.example.kotlin_ex2.data.database.main.TagDao
 import com.example.kotlin_ex2.data.database.main.WhatsappGroupDao
 import com.example.kotlin_ex2.data.database.main.entities.asDomainModel
+import com.example.kotlin_ex2.domain.WhatsappGroup
+import com.example.kotlin_ex2.domain.asNetworkModel
 import com.example.kotlin_ex2.network.main.WhatsappGroupApiService
 import com.example.kotlin_ex2.network.main.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +55,10 @@ class MainRepository @Inject constructor(
 
     fun retry() {
         boundaryCallback.retry()
+    }
+
+    suspend fun addGroup(group: WhatsappGroup) {
+        api.addGroup(group.asNetworkModel())
     }
 
     suspend fun loadTags() {
