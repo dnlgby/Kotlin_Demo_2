@@ -6,31 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.EditText
-import androidx.fragment.app.DialogFragment
 import com.example.kotlin_ex2.R
 import com.example.kotlin_ex2.common.AppAnimations
 import com.example.kotlin_ex2.domain.WhatsappGroup
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.add_whatsappgroup_dialog_fragment.view.*
+import javax.inject.Inject
 
-class AddWhatsappGroupDialogFragment : DialogFragment {
+class AddWhatsappGroupDialogFragment
+@Inject constructor(private val callbacks: MainActivity) : DaggerDialogFragment() {
 
 
     companion object {
         const val SCALE_DOWN_ANIMATION_DURATION = 300L
         const val SCALE_DOWN_ANIMATION_MIN = 0.5f
         const val SCALE_DOWN_ANIMATION_MAX = 1.0f
-        fun getInstance(callbacks: AddWhatsappGroupDialogCallbacks): AddWhatsappGroupDialogFragment {
-            return AddWhatsappGroupDialogFragment(callbacks)
-        }
     }
 
     private lateinit var dialogView: View
-    private var callbacks: AddWhatsappGroupDialogCallbacks
-    private var z = false
-
-    constructor(callbacks: AddWhatsappGroupDialogCallbacks) {
-        this.callbacks = callbacks
-    }
 
 
     override fun onCreateView(
@@ -60,45 +53,12 @@ class AddWhatsappGroupDialogFragment : DialogFragment {
     }
 
     private fun setTagFilterViewItems() {
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            1,
-            R.drawable.icon_dating_dis, R.drawable.icon_dating_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            2,
-            R.drawable.icon_family_dis, R.drawable.icon_family_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            3,
-            R.drawable.icon_funny_dis, R.drawable.icon_funny_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            4,
-            R.drawable.icon_parenting_dis, R.drawable.icon_parenting_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            5,
-            R.drawable.icon_travel_dis, R.drawable.icon_travel_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            6,
-            R.drawable.icon_sex_dis, R.drawable.icon_sex_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            7,
-            R.drawable.icon_talking_dis, R.drawable.icon_talking_ena
-        )
-
-        dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-            8,
-            R.drawable.icon_food_dis, R.drawable.icon_food_ena
-        )
+//        for (tagDesc in tagsDescriptions)
+//            dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+//                tagDesc.id,
+//                tagDesc.drawableOff,
+//                tagDesc.drawableOn
+//            )
     }
 
     private fun setListeners() {
@@ -122,7 +82,7 @@ class AddWhatsappGroupDialogFragment : DialogFragment {
             return value
         }
 
-        fun validateGroupTags(): List<Int>? {
+        fun validateGroupTags(): List<Long>? {
             val groupTags = dialogView.main_AddGroupDialogTagFilterView.getEnabledItemIds()
             if (groupTags.isEmpty()) {
                 val animShake = AnimationUtils.loadAnimation(context, R.anim.shake_animation)

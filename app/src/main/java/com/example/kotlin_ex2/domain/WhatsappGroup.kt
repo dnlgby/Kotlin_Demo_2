@@ -1,13 +1,13 @@
 package com.example.kotlin_ex2.domain
 
-import com.example.kotlin_ex2.network.main.models.NetworkWhatsappGroup
+import com.example.kotlin_ex2.network.models.NetworkWhatsappGroup
 
 data class WhatsappGroup(
     val id: Long? = null,
     val name: String,
     val description: String,
     val inviteLink: String,
-    val tags: List<Int> = emptyList()
+    val tags: List<Long> = emptyList()
 )
 
 

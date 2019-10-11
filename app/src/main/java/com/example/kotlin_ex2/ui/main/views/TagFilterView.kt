@@ -21,14 +21,14 @@ class TagFilterView(context: Context, attrs: AttributeSet?) : GridLayout(context
         rowCount = DEFAULT_ROW_COUNT
     }
 
-    fun addTagToggleItem(itemId: Int, offDrawable: Int, onDrawable: Int) {
+    fun addTagToggleItem(itemId: Long, offDrawable: Int, onDrawable: Int) {
         val view = ToggleView(context, itemId, offDrawable, onDrawable)
         toggleViews.add(view)
         addView(view)
     }
 
-    fun getEnabledItemIds(): List<Int> {
-        val ret = mutableListOf<Int>()
+    fun getEnabledItemIds(): List<Long> {
+        val ret = mutableListOf<Long>()
         toggleViews.forEach { if (it.enabled()) ret.add(it.getItemId()!!) }
         return ret
     }

@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlin_ex2.databinding.ActivityMainGroupListItemBinding
 import com.example.kotlin_ex2.databinding.ActivityMainGroupListNetworkStatusItemBinding
 import com.example.kotlin_ex2.domain.WhatsappGroup
-import com.example.kotlin_ex2.network.main.RequestStatus
-import com.example.kotlin_ex2.network.main.Status
+import com.example.kotlin_ex2.network.RequestStatus
+import com.example.kotlin_ex2.network.Status
 
 class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
     PagedListAdapter<WhatsappGroup, RecyclerView.ViewHolder>(

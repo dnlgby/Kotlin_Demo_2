@@ -18,7 +18,7 @@ class ToggleView : ImageView {
         const val DEFAULT_VALUE_XML_ID = 0
     }
 
-    private var itemId: Int? = null
+    private var itemId: Long? = null
     private var onDrawable: Drawable? = null
     private var offDrawable: Drawable? = null
     private var drawableSize = DEFAULT_DRAWABLE_SIZE
@@ -27,7 +27,7 @@ class ToggleView : ImageView {
 
 
     constructor(
-        context: Context, itemId: Int, offDrawable: Int, onDrawable: Int,
+        context: Context, itemId: Long, offDrawable: Int, onDrawable: Int,
         size: Int = DEFAULT_DRAWABLE_SIZE
     )
             : super(context, null) {
@@ -42,7 +42,7 @@ class ToggleView : ImageView {
 
     private fun loadAttributes(
         context: Context,
-        itemId: Int,
+        itemId: Long,
         offDrawable: Int,
         onDrawable: Int,
         size: Int
@@ -55,7 +55,8 @@ class ToggleView : ImageView {
 
     private fun loadXmlAttributes(attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ToggleView)
-        itemId = typedArray.getInteger(R.styleable.ToggleView_item_id, DEFAULT_VALUE_XML_ID)
+        itemId =
+            typedArray.getInteger(R.styleable.ToggleView_item_id, DEFAULT_VALUE_XML_ID).toLong()
         onDrawable = typedArray.getDrawable(R.styleable.ToggleView_on_drawable)
         offDrawable = typedArray.getDrawable(R.styleable.ToggleView_off_drawable)
         drawableSize =
@@ -75,7 +76,7 @@ class ToggleView : ImageView {
         layoutParams = params
     }
 
-    fun getItemId(): Int? {
+    fun getItemId(): Long? {
         return itemId
     }
 

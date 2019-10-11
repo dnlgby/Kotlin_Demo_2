@@ -1,6 +1,7 @@
 package com.example.kotlin_ex2.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -8,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.example.kotlin_ex2.R
 import com.example.kotlin_ex2.domain.WhatsappGroup
-import com.example.kotlin_ex2.repositories.main.Action
+import com.example.kotlin_ex2.repositories.Action
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -29,18 +30,19 @@ class MainActivity : DaggerAppCompatActivity(),
         viewModelFactory
     }
 
+    @Inject
+    lateinit var addGroupDialog: AddWhatsappGroupDialogFragment
     private lateinit var mainListAdapter: MainRecyclerAdapter
-    private lateinit var addGroupDialog: AddWhatsappGroupDialogFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        observeViewModel()
+        initViewModel()
         initUi()
     }
 
-    private fun observeViewModel() {
+    private fun initViewModel() {
 
         mainViewModel.whatsappGroupsLiveData.observe(this, Observer {
             mainListAdapter.submitList(it)
@@ -61,6 +63,16 @@ class MainActivity : DaggerAppCompatActivity(),
             }
         })
 
+        mainViewModel.getTagsStatusLiveData.observe(this, Observer {
+
+            for (tagItem in it)
+                Log.d("ZOXOZ", tagItem.toString())
+
+//                is Action.Error -> {
+//                    if (addGroupDialog.isVisible) addGroupDialog.actionFailure()
+//                    Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
+//                }
+        })
     }
 
     private fun initUi() {
@@ -73,8 +85,6 @@ class MainActivity : DaggerAppCompatActivity(),
         main_AddButtonLv.apply {
             setOnClickListener {
                 (it as LottieAnimationView).playAnimation()
-                addGroupDialog =
-                    AddWhatsappGroupDialogFragment.getInstance(this@MainActivity)
                 addGroupDialog.show(
                     supportFragmentManager,
                     ADD_WHATSAPP_GROUP_DIALOG_TAG

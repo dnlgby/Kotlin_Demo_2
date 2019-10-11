@@ -1,21 +1,25 @@
-package com.example.kotlin_ex2.repositories.main
+package com.example.kotlin_ex2.repositories
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.Config
 import androidx.paging.toLiveData
-import com.example.kotlin_ex2.data.database.main.TagDao
-import com.example.kotlin_ex2.data.database.main.WhatsappGroupDao
-import com.example.kotlin_ex2.data.database.main.entities.asDomainModel
+import com.example.kotlin_ex2.data.database.TagDao
+import com.example.kotlin_ex2.data.database.WhatsappGroupDao
+import com.example.kotlin_ex2.data.database.entities.asDomainModel
+import com.example.kotlin_ex2.domain.Tag
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.domain.asNetworkModel
-import com.example.kotlin_ex2.network.main.WhatsappGroupApiService
-import com.example.kotlin_ex2.network.main.models.asDatabaseModel
+import com.example.kotlin_ex2.network.WhatsappGroupApiService
+import com.example.kotlin_ex2.network.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class MainRepository @Inject constructor(
+class Repository @Inject constructor(
     private val api: WhatsappGroupApiService,
     private val tagDao: TagDao,
     private val whatsappGroupDao: WhatsappGroupDao
@@ -61,9 +65,21 @@ class MainRepository @Inject constructor(
         api.addGroup(group.asNetworkModel())
     }
 
-    suspend fun loadTags() {
-        val results = api.getTags().results.asDatabaseModel()
-        tagDao.insertAllTags(results)
+    fun getAllTags(): LiveData<List<Tag>> {
+        return Transformations.map(tagDao.getAllTags()) {
+            it.asDomainModel()
+        }
+    }
+
+    fun loadTags() {
+        repositoryScope.launch {
+            try {
+                val results = api.getTags().results.asDatabaseModel()
+                tagDao.insertAllTags(results)
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            }
+        }
     }
 
     fun clear() {

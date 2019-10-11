@@ -5,18 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kotlin_ex2.domain.WhatsappGroup
-import com.example.kotlin_ex2.repositories.main.Action
-import com.example.kotlin_ex2.repositories.main.MainRepository
+import com.example.kotlin_ex2.repositories.Action
+import com.example.kotlin_ex2.repositories.Repository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
+class MainViewModel @Inject constructor(private val mainRepository: Repository) : ViewModel() {
 
     val whatsappGroupsLiveData = mainRepository.whatsappGroupsLiveData
     val networkStateLiveData = mainRepository.networkStateLiveData
+    val getTagsStatusLiveData = mainRepository.getAllTags()
 
-    //Add group status LiveData
+    // Add group status LiveData
     private val _addGroupStatusLiveData = MutableLiveData<Action<Nothing>>()
     val addGroupStatusLiveData: LiveData<Action<Nothing>>
         get() = _addGroupStatusLiveData

@@ -1,8 +1,8 @@
-package com.example.kotlin_ex2.network.main
+package com.example.kotlin_ex2.network
 
-import com.example.kotlin_ex2.network.main.models.ApiResponseListModel
-import com.example.kotlin_ex2.network.main.models.NetworkTag
-import com.example.kotlin_ex2.network.main.models.NetworkWhatsappGroup
+import com.example.kotlin_ex2.network.models.ApiResponseListModel
+import com.example.kotlin_ex2.network.models.NetworkTag
+import com.example.kotlin_ex2.network.models.NetworkWhatsappGroup
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.example.kotlin_ex2.network.main.Status" />
+        <import type="com.example.kotlin_ex2.network.Status" />
 
         <import type="android.view.View" />
 
         <variable
             name="requestStatus"
-            type="com.example.kotlin_ex2.network.main.RequestStatus" />
+            type="com.example.kotlin_ex2.network.RequestStatus" />
 
         <variable
             name="retryCallback"

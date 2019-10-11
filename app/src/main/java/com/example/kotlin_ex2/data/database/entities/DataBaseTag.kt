@@ -1,4 +1,4 @@
-package com.example.kotlin_ex2.data.database.main.entities
+package com.example.kotlin_ex2.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

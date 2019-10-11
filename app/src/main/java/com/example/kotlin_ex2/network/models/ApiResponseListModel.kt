@@ -1,4 +1,4 @@
-package com.example.kotlin_ex2.network.main.models
+package com.example.kotlin_ex2.network.models
 
 
 data class ApiResponseListModel<T>(

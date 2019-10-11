@@ -1,14 +1,14 @@
-package com.example.kotlin_ex2.repositories.main
+package com.example.kotlin_ex2.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList.BoundaryCallback
-import com.example.kotlin_ex2.data.database.main.entities.DataBaseWhatsappGroup
+import com.example.kotlin_ex2.data.database.entities.DataBaseWhatsappGroup
 import com.example.kotlin_ex2.domain.WhatsappGroup
-import com.example.kotlin_ex2.network.main.RequestStatus
-import com.example.kotlin_ex2.network.main.models.ApiResponseListModel
-import com.example.kotlin_ex2.network.main.models.NetworkWhatsappGroup
-import com.example.kotlin_ex2.network.main.models.asDatabaseModel
+import com.example.kotlin_ex2.network.RequestStatus
+import com.example.kotlin_ex2.network.models.ApiResponseListModel
+import com.example.kotlin_ex2.network.models.NetworkWhatsappGroup
+import com.example.kotlin_ex2.network.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -42,6 +42,7 @@ class AppBoundaryCallback(
                 _networkStatus.value = RequestStatus.succeed()
                 currentPage++
                 noMoreResults = networkResult.next.isNullOrBlank()
+
             } catch (t: Exception) {
                 t.printStackTrace()
                 if (noMoreResults) _networkStatus.postValue(RequestStatus.noMore())

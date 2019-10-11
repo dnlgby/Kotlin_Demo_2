@@ -1,11 +1,11 @@
-package com.example.kotlin_ex2.data.database.main
+package com.example.kotlin_ex2.data.database
 
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.kotlin_ex2.data.database.main.entities.DataBaseWhatsappGroup
+import com.example.kotlin_ex2.data.database.entities.DataBaseWhatsappGroup
 
 
 @Dao

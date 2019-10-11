@@ -1,6 +1,6 @@
-package com.example.kotlin_ex2.network.main.models
+package com.example.kotlin_ex2.network.models
 
-import com.example.kotlin_ex2.data.database.main.entities.DataBaseWhatsappGroup
+import com.example.kotlin_ex2.data.database.entities.DataBaseWhatsappGroup
 import com.squareup.moshi.Json
 
 data class NetworkWhatsappGroup(
@@ -8,7 +8,7 @@ data class NetworkWhatsappGroup(
     val name: String,
     val description: String,
     @Json(name = "invite_link") val inviteLink: String,
-    val tags: List<Int> = emptyList()
+    val tags: List<Long> = emptyList()
 )
 
 fun NetworkWhatsappGroup.asDatabaseModel(): DataBaseWhatsappGroup {

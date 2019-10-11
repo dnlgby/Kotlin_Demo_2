@@ -1,4 +1,4 @@
-package com.example.kotlin_ex2.data.database.main.entities
+package com.example.kotlin_ex2.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -10,7 +10,7 @@ data class DataBaseWhatsappGroup(
     val name: String,
     val description: String,
     val inviteLink: String,
-    val tags: List<Int> = emptyList()
+    val tags: List<Long> = emptyList()
 )
 
 fun DataBaseWhatsappGroup.asDomainModel(): WhatsappGroup {

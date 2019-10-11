@@ -1,6 +1,6 @@
-package com.example.kotlin_ex2.network.main.models
+package com.example.kotlin_ex2.network.models
 
-import com.example.kotlin_ex2.data.database.main.entities.DataBaseTag
+import com.example.kotlin_ex2.data.database.entities.DataBaseTag
 
 data class NetworkTag(
     val id: Long,
