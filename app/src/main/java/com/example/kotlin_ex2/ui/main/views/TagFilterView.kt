@@ -16,7 +16,6 @@ class TagFilterView(context: Context, attrs: AttributeSet?) : GridLayout(context
     private var toggleViews = mutableListOf<ToggleView>()
 
     init {
-        toggleViews = mutableListOf()
         columnCount = DEFAULT_COLUMN_COUNT
         rowCount = DEFAULT_ROW_COUNT
     }
@@ -36,6 +35,10 @@ class TagFilterView(context: Context, attrs: AttributeSet?) : GridLayout(context
     fun toggleView(toggle: Boolean) {
         alpha = if (toggle) TOGGLE_ALPHA_VAL_ON else TOGGLE_ALPHA_VAL_OFF
         toggleViews.forEach { it.isEnabled = toggle }
+    }
+
+    fun resetView() {
+        toggleViews.forEach { it.reset() }
     }
 
 }

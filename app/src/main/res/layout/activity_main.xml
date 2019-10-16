@@ -27,21 +27,60 @@
         app:lottie_loop="false" />
 
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/main_AddButtonLv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <!--    <FrameLayout-->
+    <!--        android:layout_width="300dp"-->
+    <!--        android:layout_height="80dp"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:background="@color/colorPrimaryDark"-->
+    <!--        android:elevation="5dp"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/main_FilterButtonLv"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/main_FilterButtonLv" />-->
+
+
+    <com.daasuu.bl.BubbleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:elevation="5dp"
+        android:padding="15dp"
+        app:bl_arrowDirection="top"
+        app:bl_arrowHeight="12dp"
+        app:bl_arrowPosition="10dp"
+        app:bl_arrowWidth="8dp"
+        app:bl_bubbleColor="#fff"
+        app:bl_cornersRadius="6dp"
+        app:bl_strokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/main_FilterButtonLv"
+        app:layout_constraintTop_toBottomOf="@+id/main_FilterButtonLv">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.example.kotlin_ex2.ui.main.views.TagFilterView
+                android:id="@+id/main_ListFilterByTagFilterView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </com.daasuu.bl.BubbleLayout>
+
+    <ImageView
+        android:id="@+id/main_AddButtonIv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="8dp"
+        android:alpha="0.4"
+        android:src="@drawable/ic_add_white_48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/main_groupsRecycler"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_speed="5"
-        app:lottie_autoPlay="false"
-        app:lottie_fileName="add_lottie.json"
-        app:lottie_loop="false" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:alpha="0.4"
         android:id="@+id/main_groupsRecycler"
         android:layout_width="0dp"
         android:layout_height="match_parent"

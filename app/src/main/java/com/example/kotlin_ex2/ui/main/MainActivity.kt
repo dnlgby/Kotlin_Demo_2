@@ -1,18 +1,23 @@
 package com.example.kotlin_ex2.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.example.kotlin_ex2.R
+import com.example.kotlin_ex2.common.AppAnimations.Utils.animateImageView
+import com.example.kotlin_ex2.common.Constants.Tags.TagDescription
+import com.example.kotlin_ex2.common.Constants.Tags.getTagDescription
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.repositories.Action
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : DaggerAppCompatActivity(),
     AddWhatsappGroupDialogFragment.AddWhatsappGroupDialogCallbacks {
@@ -33,7 +38,8 @@ class MainActivity : DaggerAppCompatActivity(),
     @Inject
     lateinit var addGroupDialog: AddWhatsappGroupDialogFragment
     private lateinit var mainListAdapter: MainRecyclerAdapter
-
+    private lateinit var tagsDescriptions: List<TagDescription>
+    private var notx: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,15 +69,23 @@ class MainActivity : DaggerAppCompatActivity(),
             }
         })
 
-        mainViewModel.getTagsStatusLiveData.observe(this, Observer {
+        mainViewModel.getTagsStatusLiveData.observe(this, Observer { tags ->
+            tagsDescriptions = tags.map { tagItem ->
+                getTagDescription(tagItem.id)
+            }
+            addGroupDialog.setTagsDescriptions(tagsDescriptions)
 
-            for (tagItem in it)
-                Log.d("ZOXOZ", tagItem.toString())
+            //Temp
+            if (tagsDescriptions != null && notx) {
+                notx = false
+                for (tagDesc in tagsDescriptions)
+                    main_ListFilterByTagFilterView.addTagToggleItem(
+                        tagDesc.id,
+                        tagDesc.drawableOff,
+                        tagDesc.drawableOn
+                    )
+            }
 
-//                is Action.Error -> {
-//                    if (addGroupDialog.isVisible) addGroupDialog.actionFailure()
-//                    Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
-//                }
         })
     }
 
@@ -79,12 +93,17 @@ class MainActivity : DaggerAppCompatActivity(),
         main_FilterButtonLv.apply {
             setOnClickListener {
                 (it as LottieAnimationView).playAnimation()
+                //(main_FilterButtonLv as LottieAnimationView).progress = 0f
+
             }
         }
 
-        main_AddButtonLv.apply {
+
+
+        main_AddButtonIv.apply {
             setOnClickListener {
-                (it as LottieAnimationView).playAnimation()
+
+                animateImageView(context, this, R.animator.icon_property_animator)
                 addGroupDialog.show(
                     supportFragmentManager,
                     ADD_WHATSAPP_GROUP_DIALOG_TAG
@@ -92,7 +111,12 @@ class MainActivity : DaggerAppCompatActivity(),
             }
         }
 
-        mainListAdapter = MainRecyclerAdapter(retryCallback = { mainViewModel.retryFetch() })
+        mainListAdapter = MainRecyclerAdapter(
+            retryCallback = { mainViewModel.retryFetch() },
+            mainViewItemClickListener = MainRecyclerAdapter.MainViewItemClickListener { group ->
+                openGroupInvitationLink(group)
+            })
+
         main_groupsRecycler.apply {
             addItemDecoration(
                 MainListItemDecoration(LIST_SPACING)
@@ -105,4 +129,13 @@ class MainActivity : DaggerAppCompatActivity(),
         mainViewModel.addGroup(group)
     }
 
+    private fun openGroupInvitationLink(group: WhatsappGroup) {
+        var url = group.inviteLink
+        if (!url.startsWith("https://") && !url.startsWith("http://")) {
+            url = "http://$url"
+        }
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
+    }
 }

@@ -13,7 +13,10 @@ import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.network.RequestStatus
 import com.example.kotlin_ex2.network.Status
 
-class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
+class MainRecyclerAdapter(
+    private val retryCallback: () -> Unit,
+    private val mainViewItemClickListener: MainViewItemClickListener
+) :
     PagedListAdapter<WhatsappGroup, RecyclerView.ViewHolder>(
         AsyncDifferConfig.Builder<WhatsappGroup>(DIFF_CALLBACK).build()
     ) {
@@ -74,7 +77,10 @@ class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            GROUP_VIEWTYPE -> (holder as MainViewHolder).bind(getItem(position))
+            GROUP_VIEWTYPE -> (holder as MainViewHolder).bind(
+                getItem(position),
+                mainViewItemClickListener
+            )
             NETWORKSTATUS_VIEWTYPE -> (holder as NetworkStatusViewHolder).bind(requestStatus)
         }
     }
@@ -90,9 +96,15 @@ class MainRecyclerAdapter(private val retryCallback: () -> Unit) :
             }
         }
 
-        fun bind(item: WhatsappGroup?) {
+        fun bind(item: WhatsappGroup?, mainViewItemClickListener: MainViewItemClickListener) {
             binding.whatsappGroup = item
+            binding.clickListener = mainViewItemClickListener
         }
+    }
+
+    // Click listener definition
+    class MainViewItemClickListener(val itemClicked: (group: WhatsappGroup) -> Unit) {
+        fun onClick(group: WhatsappGroup) = itemClicked(group)
     }
 
 

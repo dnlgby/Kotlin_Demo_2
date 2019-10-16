@@ -83,4 +83,9 @@ class ToggleView : ImageView {
     fun enabled(): Boolean {
         return toggleState
     }
+
+    fun reset() {
+        toggleState = false
+        setImageDrawable(stateMap[toggleState])
+    }
 }

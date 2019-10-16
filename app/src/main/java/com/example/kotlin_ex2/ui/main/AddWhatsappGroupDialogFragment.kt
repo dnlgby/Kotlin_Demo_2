@@ -8,6 +8,7 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import com.example.kotlin_ex2.R
 import com.example.kotlin_ex2.common.AppAnimations
+import com.example.kotlin_ex2.common.Constants.Tags.TagDescription
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.add_whatsappgroup_dialog_fragment.view.*
@@ -17,13 +18,8 @@ class AddWhatsappGroupDialogFragment
 @Inject constructor(private val callbacks: MainActivity) : DaggerDialogFragment() {
 
 
-    companion object {
-        const val SCALE_DOWN_ANIMATION_DURATION = 300L
-        const val SCALE_DOWN_ANIMATION_MIN = 0.5f
-        const val SCALE_DOWN_ANIMATION_MAX = 1.0f
-    }
-
     private lateinit var dialogView: View
+    private var tagsDescriptions: List<TagDescription>? = null
 
 
     override fun onCreateView(
@@ -44,21 +40,23 @@ class AddWhatsappGroupDialogFragment
     override fun onStart() {
         super.onStart()
         val decorView = dialog!!.window!!.decorView
-        AppAnimations.ScalingAnimations.scaleDown(
-            decorView,
-            SCALE_DOWN_ANIMATION_MIN,
-            SCALE_DOWN_ANIMATION_MAX,
-            SCALE_DOWN_ANIMATION_DURATION
-        )
+        AppAnimations.ScalingAnimations.windowOpenAnimation(decorView)
+    }
+
+
+    fun setTagsDescriptions(tagsDescriptions: List<TagDescription>) {
+        this.tagsDescriptions = tagsDescriptions
     }
 
     private fun setTagFilterViewItems() {
-//        for (tagDesc in tagsDescriptions)
-//            dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-//                tagDesc.id,
-//                tagDesc.drawableOff,
-//                tagDesc.drawableOn
-//            )
+        if (tagsDescriptions != null) {
+            for (tagDesc in tagsDescriptions!!)
+                dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+                    tagDesc.id,
+                    tagDesc.drawableOff,
+                    tagDesc.drawableOn
+                )
+        }
     }
 
     private fun setListeners() {
@@ -68,7 +66,7 @@ class AddWhatsappGroupDialogFragment
         }
 
         dialogView.main_AddGroupDialogGroupCancelBtn.setOnClickListener {
-            dismiss()
+            dismissDialog()
         }
     }
 
@@ -125,7 +123,22 @@ class AddWhatsappGroupDialogFragment
     }
 
     fun actionSucceed() {
-        dismiss()
+        dismissDialog()
+    }
+
+    private fun resetDialog() {
+        dialogView.main_AddGroupDlgGroupNameEt.text.clear()
+        dialogView.main_AddGroupDlgGroupDescriptionEt.text.clear()
+        dialogView.main_AddGroupDlgGroupInviteLinkEt.text.clear()
+        dialogView.main_AddGroupDialogTagFilterView.resetView()
+    }
+
+    private fun dismissDialog() {
+        val decorView = dialog!!.window!!.decorView
+        AppAnimations.ScalingAnimations.windowCloseAnimation(decorView) {
+            resetDialog()
+            dismiss()
+        }
     }
 
     private fun toggleViews(toggle: Boolean) {

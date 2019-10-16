@@ -4,16 +4,26 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="whatsappGroup"
             type="com.example.kotlin_ex2.domain.WhatsappGroup" />
+
+        <variable
+            name="tagDescriptions"
+            type="com.example.kotlin_ex2.common.Constants.Tags" />
+
+        <variable
+            name="clickListener"
+            type="com.example.kotlin_ex2.ui.main.MainRecyclerAdapter.MainViewItemClickListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        app:cardElevation="10dp"
+        android:onClick="@{()->clickListener.onClick(whatsappGroup)}"
         app:cardCornerRadius="7dp"
+        app:cardElevation="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,10 +34,10 @@
                 android:id="@+id/main_groupsListItemNameTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:text="@{whatsappGroup.name}"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tool:text="Group Title" />
@@ -36,32 +46,21 @@
                 android:id="@+id/main_groupsListItemDescriptionTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:text="@{whatsappGroup.description}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_groupsListItemNameTv"
                 tool:text="Group Description" />
 
-            <TextView
+            <com.example.kotlin_ex2.ui.main.views.TagsView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
+                app:groupTagsAdapter="@{whatsappGroup.tags}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/main_groupsListItemDescriptionTv"
-                tool:text="Tag1, Tag2, Tag3" />
-
-            <!--            <com.google.android.material.button.MaterialButton-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginEnd="20dp"-->
-            <!--                android:backgroundTint="@color/colorPrimaryDark"-->
-            <!--                android:text="Join"-->
-            <!--                app:cornerRadius="5dp"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent" />-->
+                app:layout_constraintTop_toBottomOf="@+id/main_groupsListItemDescriptionTv" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
