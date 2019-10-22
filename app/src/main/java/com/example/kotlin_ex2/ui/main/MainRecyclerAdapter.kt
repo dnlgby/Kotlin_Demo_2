@@ -49,7 +49,7 @@ class MainRecyclerAdapter(
             } else {
                 notifyItemInserted(super.getItemCount())
             }
-        } else if (hasExtraRow) {// && previousState != newRequestStatus) {
+        } else if (hasExtraRow && previousState != newRequestStatus) {
             notifyItemChanged(itemCount - 1)
         }
     }

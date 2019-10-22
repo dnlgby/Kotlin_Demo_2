@@ -8,7 +8,7 @@ data class NetworkWhatsappGroup(
     val name: String,
     val description: String,
     @Json(name = "invite_link") val inviteLink: String,
-    val tags: List<Long> = emptyList()
+    val tags: Set<Long> = emptySet()
 )
 
 fun NetworkWhatsappGroup.asDatabaseModel(): DataBaseWhatsappGroup {

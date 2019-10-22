@@ -14,12 +14,13 @@ import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.add_whatsappgroup_dialog_fragment.view.*
 import javax.inject.Inject
 
+
 class AddWhatsappGroupDialogFragment
 @Inject constructor(private val callbacks: MainActivity) : DaggerDialogFragment() {
 
 
     private lateinit var dialogView: View
-    private var tagsDescriptions: List<TagDescription>? = null
+    private var tagsDescriptions = mutableSetOf<TagDescription>()
 
 
     override fun onCreateView(
@@ -43,20 +44,17 @@ class AddWhatsappGroupDialogFragment
         AppAnimations.ScalingAnimations.windowOpenAnimation(decorView)
     }
 
-
-    fun setTagsDescriptions(tagsDescriptions: List<TagDescription>) {
-        this.tagsDescriptions = tagsDescriptions
+    fun addTagDescription(tagDescription: TagDescription) {
+        tagsDescriptions.add(tagDescription)
     }
 
     private fun setTagFilterViewItems() {
-        if (tagsDescriptions != null) {
-            for (tagDesc in tagsDescriptions!!)
-                dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
-                    tagDesc.id,
-                    tagDesc.drawableOff,
-                    tagDesc.drawableOn
-                )
-        }
+        for (tagDesc in tagsDescriptions)
+            dialogView.main_AddGroupDialogTagFilterView.addTagToggleItem(
+                tagDesc.id,
+                tagDesc.drawableOff,
+                tagDesc.drawableOn
+            )
     }
 
     private fun setListeners() {
@@ -80,7 +78,7 @@ class AddWhatsappGroupDialogFragment
             return value
         }
 
-        fun validateGroupTags(): List<Long>? {
+        fun validateGroupTags(): Set<Long>? {
             val groupTags = dialogView.main_AddGroupDialogTagFilterView.getEnabledItemIds()
             if (groupTags.isEmpty()) {
                 val animShake = AnimationUtils.loadAnimation(context, R.anim.shake_animation)

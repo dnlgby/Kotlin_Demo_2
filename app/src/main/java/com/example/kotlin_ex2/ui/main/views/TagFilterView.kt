@@ -13,7 +13,8 @@ class TagFilterView(context: Context, attrs: AttributeSet?) : GridLayout(context
         const val TOGGLE_ALPHA_VAL_OFF = 0.5f
     }
 
-    private var toggleViews = mutableListOf<ToggleView>()
+    private var toggleViews = mutableMapOf<Long, ToggleView>()
+    private var stateChangedListener: (() -> Unit)? = null
 
     init {
         columnCount = DEFAULT_COLUMN_COUNT
@@ -22,23 +23,30 @@ class TagFilterView(context: Context, attrs: AttributeSet?) : GridLayout(context
 
     fun addTagToggleItem(itemId: Long, offDrawable: Int, onDrawable: Int) {
         val view = ToggleView(context, itemId, offDrawable, onDrawable)
-        toggleViews.add(view)
+        view.setOnToggledListener { stateChangedListener?.invoke() }
+        if (toggleViews.containsKey(itemId))
+            removeView(toggleViews[itemId])
+        toggleViews[itemId] = view
         addView(view)
     }
 
-    fun getEnabledItemIds(): List<Long> {
-        val ret = mutableListOf<Long>()
-        toggleViews.forEach { if (it.enabled()) ret.add(it.getItemId()!!) }
+    fun setStateChangedListener(stateChangedListener: () -> Unit) {
+        this.stateChangedListener = stateChangedListener
+    }
+
+    fun getEnabledItemIds(): Set<Long> {
+        val ret = mutableSetOf<Long>()
+        toggleViews.forEach { if (it.value.enabled()) ret.add(it.key) }
         return ret
     }
 
     fun toggleView(toggle: Boolean) {
         alpha = if (toggle) TOGGLE_ALPHA_VAL_ON else TOGGLE_ALPHA_VAL_OFF
-        toggleViews.forEach { it.isEnabled = toggle }
+        toggleViews.forEach { it.value.isEnabled = toggle }
     }
 
     fun resetView() {
-        toggleViews.forEach { it.reset() }
+        toggleViews.forEach { it.value.reset() }
     }
 
 }

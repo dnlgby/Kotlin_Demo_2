@@ -1,9 +1,7 @@
 package com.example.kotlin_ex2.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.PagedList
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.repositories.Action
 import com.example.kotlin_ex2.repositories.Repository
@@ -13,15 +11,38 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainRepository: Repository) : ViewModel() {
 
-    val whatsappGroupsLiveData = mainRepository.whatsappGroupsLiveData
+
+    val whatsappGroupsLiveData = MediatorLiveData<PagedList<WhatsappGroup>>()
+    private var currentGroupSourceLiveData: LiveData<PagedList<WhatsappGroup>>? = null
+
+    // In the beginning - Listen to the global source (This is a TEST ofc).
+    init {
+        //setQuery(mutableSetOf(19))
+        //whatsappGroupsLiveData.addSource(mainRepository.whatsappGroupsLiveData) {
+        //    whatsappGroupsLiveData.value = it
+        // }
+    }
+
+    //val whatsappGroupsLiveData = mainRepository.whatsappGroupsLiveData
     val networkStateLiveData = mainRepository.networkStateLiveData
     val getTagsStatusLiveData = mainRepository.getAllTags()
+    val test = mainRepository.test
 
     // Add group status LiveData
     private val _addGroupStatusLiveData = MutableLiveData<Action<Nothing>>()
     val addGroupStatusLiveData: LiveData<Action<Nothing>>
         get() = _addGroupStatusLiveData
 
+
+    fun setQuery(query: Set<Long>) {
+        if (currentGroupSourceLiveData != null) whatsappGroupsLiveData.removeSource(
+            currentGroupSourceLiveData!!
+        )
+        currentGroupSourceLiveData = mainRepository.setQuery(query)
+        whatsappGroupsLiveData.addSource(currentGroupSourceLiveData!!) {
+            whatsappGroupsLiveData.value = it
+        }
+    }
 
     fun addGroup(group: WhatsappGroup) {
         viewModelScope.launch {

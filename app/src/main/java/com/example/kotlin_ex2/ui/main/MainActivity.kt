@@ -3,14 +3,13 @@ package com.example.kotlin_ex2.ui.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.airbnb.lottie.LottieAnimationView
 import com.example.kotlin_ex2.R
 import com.example.kotlin_ex2.common.AppAnimations.Utils.animateImageView
-import com.example.kotlin_ex2.common.Constants.Tags.TagDescription
 import com.example.kotlin_ex2.common.Constants.Tags.getTagDescription
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.repositories.Action
@@ -20,11 +19,15 @@ import javax.inject.Inject
 
 
 class MainActivity : DaggerAppCompatActivity(),
-    AddWhatsappGroupDialogFragment.AddWhatsappGroupDialogCallbacks {
+    AddWhatsappGroupDialogFragment.AddWhatsappGroupDialogCallbacks,
+    FilterDialogFragment.FilterDialogCallBacks {
+
 
 
     companion object {
         const val LIST_SPACING = 20
+        const val FILTER_GROUP_DIALOG_TAG =
+            "com.example.kotlin_ex2.ui.main.FilterDialogFragment"
         const val ADD_WHATSAPP_GROUP_DIALOG_TAG =
             "com.example.kotlin_ex2.ui.main.AddWhatsappGroupDialogFragment"
     }
@@ -37,9 +40,9 @@ class MainActivity : DaggerAppCompatActivity(),
 
     @Inject
     lateinit var addGroupDialog: AddWhatsappGroupDialogFragment
+    @Inject
+    lateinit var filterGroupDialog: FilterDialogFragment
     private lateinit var mainListAdapter: MainRecyclerAdapter
-    private lateinit var tagsDescriptions: List<TagDescription>
-    private var notx: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,39 +73,35 @@ class MainActivity : DaggerAppCompatActivity(),
         })
 
         mainViewModel.getTagsStatusLiveData.observe(this, Observer { tags ->
-            tagsDescriptions = tags.map { tagItem ->
-                getTagDescription(tagItem.id)
+            tags.forEach { tagItem ->
+                val tagDescription = getTagDescription(tagItem.id)
+                addGroupDialog.addTagDescription(tagDescription)
+                filterGroupDialog.addTagDescription(tagDescription)
             }
-            addGroupDialog.setTagsDescriptions(tagsDescriptions)
+        })
 
-            //Temp
-            if (tagsDescriptions != null && notx) {
-                notx = false
-                for (tagDesc in tagsDescriptions)
-                    main_ListFilterByTagFilterView.addTagToggleItem(
-                        tagDesc.id,
-                        tagDesc.drawableOff,
-                        tagDesc.drawableOn
-                    )
+
+        mainViewModel.test.observe(this, Observer {
+            it.forEach { v ->
+                Log.d("CHECKX", v.toString())
             }
-
         })
     }
+
 
     private fun initUi() {
         main_FilterButtonLv.apply {
             setOnClickListener {
-                (it as LottieAnimationView).playAnimation()
-                //(main_FilterButtonLv as LottieAnimationView).progress = 0f
-
+                animateImageView(context, this, R.animator.icon_property_animator)
+                filterGroupDialog.show(
+                    supportFragmentManager,
+                    FILTER_GROUP_DIALOG_TAG
+                )
             }
         }
 
-
-
         main_AddButtonIv.apply {
             setOnClickListener {
-
                 animateImageView(context, this, R.animator.icon_property_animator)
                 addGroupDialog.show(
                     supportFragmentManager,
@@ -123,6 +122,11 @@ class MainActivity : DaggerAppCompatActivity(),
             )
             adapter = mainListAdapter
         }
+    }
+
+    override fun tagsStateChanged(enabledItemIds: Set<Long>) {
+        Log.d("ZAINXXX", "STATE CHANGED $enabledItemIds")
+        mainViewModel.setQuery(enabledItemIds)
     }
 
     override fun groupAdded(group: WhatsappGroup) {

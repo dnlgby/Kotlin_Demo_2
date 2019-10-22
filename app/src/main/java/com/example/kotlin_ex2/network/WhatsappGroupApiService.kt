@@ -11,7 +11,11 @@ import retrofit2.http.Query
 interface WhatsappGroupApiService {
 
     @GET("api/groups/")
-    suspend fun getGroups(@Query("page") page: Int): ApiResponseListModel<NetworkWhatsappGroup>
+    suspend fun getGroups(
+        @Query("page") page: Int,
+        @Query("tags") tags: Set<Long>? = null
+    ):
+            ApiResponseListModel<NetworkWhatsappGroup>
 
     @POST("api/groups/")
     suspend fun addGroup(@Body whatsappGroup: NetworkWhatsappGroup)

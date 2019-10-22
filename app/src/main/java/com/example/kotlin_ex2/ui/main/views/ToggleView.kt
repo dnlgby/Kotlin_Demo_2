@@ -23,6 +23,8 @@ class ToggleView : ImageView {
     private var offDrawable: Drawable? = null
     private var drawableSize = DEFAULT_DRAWABLE_SIZE
     private var toggleState = false
+    private var onToggledListener: (() -> Unit)? = null
+
     private lateinit var stateMap: Map<Boolean, Drawable?>
 
 
@@ -69,11 +71,16 @@ class ToggleView : ImageView {
         setOnClickListener {
             toggleState = !toggleState
             setImageDrawable(stateMap[toggleState])
+            onToggledListener?.invoke()
         }
         val sizeInPix = (drawableSize * Resources.getSystem().displayMetrics.density).toInt()
         val params = ViewGroup.MarginLayoutParams(sizeInPix, sizeInPix)
         params.setMargins(DEFAULT_MARGIN, DEFAULT_MARGIN, DEFAULT_MARGIN, DEFAULT_MARGIN)
         layoutParams = params
+    }
+
+    fun setOnToggledListener(onClickListener: () -> Unit) {
+        this.onToggledListener = onClickListener
     }
 
     fun getItemId(): Long? {

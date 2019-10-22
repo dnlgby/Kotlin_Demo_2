@@ -3,6 +3,11 @@ package com.example.kotlin_ex2.common
 import com.example.kotlin_ex2.R
 
 object Constants {
+
+    object Main {
+        const val WHATSAPP_INVITATION_LINK_PREFIX = "https://chat.whatsapp.com/invite/"
+    }
+
     object Server {
         const val SERVER_BASE_URL = "http://ec2-3-15-150-102.us-east-2.compute.amazonaws.com/"
     }

@@ -7,7 +7,7 @@ data class WhatsappGroup(
     val name: String,
     val description: String,
     val inviteLink: String,
-    val tags: List<Long> = emptyList()
+    val tags: Set<Long> = emptySet()
 )
 
 

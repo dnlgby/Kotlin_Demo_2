@@ -2,7 +2,9 @@ package com.example.kotlin_ex2.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.liveData
 import androidx.paging.Config
+import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.kotlin_ex2.data.database.TagDao
 import com.example.kotlin_ex2.data.database.WhatsappGroupDao
@@ -25,19 +27,26 @@ class Repository @Inject constructor(
     private val whatsappGroupDao: WhatsappGroupDao
 ) {
 
-    private val repositoryJob = Job()
-    private val repositoryScope = CoroutineScope(Main + repositoryJob)
 
     companion object {
-        const val WHATSAPP_GROUP_PAGE_SIZE = 6
-        const val WHATSAPP_GROUP_LIST_MAX_SIZE = 200
-        const val WHATSAPP_GROUP_LIST_PLACE_HOLDER = true
-        const val WHATSAPP_GROUP_LIST_BEGIN_PAGE = 1
+        private val WHATSAPP_GROUP_PAGE_SIZE = 6
+        private const val WHATSAPP_GROUP_LIST_MAX_SIZE = 200
+        private const val WHATSAPP_GROUP_LIST_PLACE_HOLDER = true
+        private const val WHATSAPP_GROUP_LIST_BEGIN_PAGE = 1
+
+        private val repositoryJob = Job()
+        private val repositoryScope = CoroutineScope(Main + repositoryJob)
+
+        private val pagingConfig = Config(
+            pageSize = WHATSAPP_GROUP_PAGE_SIZE,
+            maxSize = WHATSAPP_GROUP_LIST_MAX_SIZE,
+            enablePlaceholders = WHATSAPP_GROUP_LIST_PLACE_HOLDER
+        )
     }
 
     private val boundaryCallback =
         AppBoundaryCallback(
-            { api.getGroups(it) },
+            { PAGE, QUERY -> api.getGroups(PAGE, QUERY) },
             { whatsappGroupDao.insertAllWhatsappGroups(it) },
             WHATSAPP_GROUP_LIST_BEGIN_PAGE,
             repositoryScope
@@ -45,21 +54,25 @@ class Repository @Inject constructor(
 
     val networkStateLiveData = boundaryCallback.requestStatus
 
-    val whatsappGroupsLiveData by lazy {
-        whatsappGroupDao.getAllWhatsappGroups().map { it.asDomainModel() }
-            .toLiveData(
-                Config(
-                    pageSize = WHATSAPP_GROUP_PAGE_SIZE,
-                    maxSize = WHATSAPP_GROUP_LIST_MAX_SIZE,
-                    enablePlaceholders = WHATSAPP_GROUP_LIST_PLACE_HOLDER
-                ),
-                boundaryCallback = boundaryCallback
-            )
+    val test = liveData {
+        emitSource(whatsappGroupDao.test())
     }
 
-    fun retry() {
-        boundaryCallback.retry()
+    // All data LiveData
+    val whatsappGroupsLiveData by lazy {
+        whatsappGroupDao.getAllWhatsappGroups().map { it.asDomainModel() }
+            .toLiveData(pagingConfig, boundaryCallback = boundaryCallback)
     }
+
+    // Get filtered data LiveData
+    fun setQuery(query: Set<Long>): LiveData<PagedList<WhatsappGroup>> {
+        boundaryCallback.setQuery(query)
+        return whatsappGroupDao.getWhatsappGroupsByTags(query.elementAt(0))
+            .map { it.asDomainModel() }
+            .toLiveData(pagingConfig, boundaryCallback = boundaryCallback)
+    }
+
+    fun retry() = boundaryCallback.retry()
 
     suspend fun addGroup(group: WhatsappGroup) {
         api.addGroup(group.asNetworkModel())

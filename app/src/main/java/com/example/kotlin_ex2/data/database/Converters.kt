@@ -5,17 +5,17 @@ import androidx.room.TypeConverter
 object Converters {
     @TypeConverter
     @JvmStatic
-    fun fromListLongsToString(longs: List<Long>): String {
+    fun fromSetLongsToString(longs: Set<Long>): String {
         return longs.joinToString()
     }
 
     @TypeConverter
     @JvmStatic
-    fun fromStringToListLong(string: String): List<Long> {
-        if (string.isBlank()) return emptyList()
+    fun fromStringToSetLong(string: String): Set<Long> {
+        if (string.isBlank()) return emptySet()
         return string.split(',').map {
             it.trim().toLong()
-        }
+        }.toSet()
     }
 
 }
