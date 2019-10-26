@@ -58,6 +58,10 @@ class MainRecyclerAdapter(
         return requestStatus?.status in arrayOf(Status.FETCHING, Status.FAILED)
     }
 
+    fun test() {
+        submitList(null)
+    }
+
     override fun getItemCount(): Int {
         return super.getItemCount() + (if (hasExtraRow()) 1 else 0)
     }

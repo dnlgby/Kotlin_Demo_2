@@ -1,19 +1,14 @@
 package com.example.kotlin_ex2.repositories
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.liveData
 import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.example.kotlin_ex2.data.database.TagDao
-import com.example.kotlin_ex2.data.database.WhatsappGroupDao
-import com.example.kotlin_ex2.data.database.entities.asDomainModel
+import com.example.kotlin_ex2.data.database.DatabaseLayer
 import com.example.kotlin_ex2.domain.Tag
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.domain.asNetworkModel
 import com.example.kotlin_ex2.network.WhatsappGroupApiService
-import com.example.kotlin_ex2.network.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
@@ -23,13 +18,11 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(
     private val api: WhatsappGroupApiService,
-    private val tagDao: TagDao,
-    private val whatsappGroupDao: WhatsappGroupDao
+    private val database: DatabaseLayer
 ) {
 
-
     companion object {
-        private val WHATSAPP_GROUP_PAGE_SIZE = 6
+        private val WHATSAPP_GROUP_PAGE_SIZE = 10
         private const val WHATSAPP_GROUP_LIST_MAX_SIZE = 200
         private const val WHATSAPP_GROUP_LIST_PLACE_HOLDER = true
         private const val WHATSAPP_GROUP_LIST_BEGIN_PAGE = 1
@@ -44,32 +37,33 @@ class Repository @Inject constructor(
         )
     }
 
+    // Network bound resource ballback
     private val boundaryCallback =
         AppBoundaryCallback(
             { PAGE, QUERY -> api.getGroups(PAGE, QUERY) },
-            { whatsappGroupDao.insertAllWhatsappGroups(it) },
+            { database.insertAllWhatsappGroups(it) },
             WHATSAPP_GROUP_LIST_BEGIN_PAGE,
             repositoryScope
         )
 
+    // All groups
+    val allGroupsLiveData = database.getAllWhatsappGroups()
+        .toLiveData(
+            config = pagingConfig,
+            boundaryCallback = boundaryCallback
+        )
+
+    // Network status
     val networkStateLiveData = boundaryCallback.requestStatus
-
-    val test = liveData {
-        emitSource(whatsappGroupDao.test())
-    }
-
-    // All data LiveData
-    val whatsappGroupsLiveData by lazy {
-        whatsappGroupDao.getAllWhatsappGroups().map { it.asDomainModel() }
-            .toLiveData(pagingConfig, boundaryCallback = boundaryCallback)
-    }
 
     // Get filtered data LiveData
     fun setQuery(query: Set<Long>): LiveData<PagedList<WhatsappGroup>> {
         boundaryCallback.setQuery(query)
-        return whatsappGroupDao.getWhatsappGroupsByTags(query.elementAt(0))
-            .map { it.asDomainModel() }
-            .toLiveData(pagingConfig, boundaryCallback = boundaryCallback)
+        return database.getGroupsByTags(query)
+            .toLiveData(
+                pagingConfig,
+                boundaryCallback = boundaryCallback
+            )
     }
 
     fun retry() = boundaryCallback.retry()
@@ -79,16 +73,14 @@ class Repository @Inject constructor(
     }
 
     fun getAllTags(): LiveData<List<Tag>> {
-        return Transformations.map(tagDao.getAllTags()) {
-            it.asDomainModel()
-        }
+        return database.getAllTags()
     }
 
     fun loadTags() {
         repositoryScope.launch {
             try {
-                val results = api.getTags().results.asDatabaseModel()
-                tagDao.insertAllTags(results)
+                val results = api.getTags().results
+                database.insertAllTags(results)
             } catch (t: Throwable) {
                 t.printStackTrace()
             }
@@ -97,6 +89,7 @@ class Repository @Inject constructor(
 
     fun clear() {
         repositoryJob.cancel()
+        database.deleteDataBaseContent()
     }
 
 }

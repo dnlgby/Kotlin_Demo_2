@@ -10,9 +10,12 @@ import com.example.kotlin_ex2.data.database.entities.DataBaseTag
 @Dao
 interface TagDao {
 
-    @Query("SELECT * FROM tag_table")
+    @Query("SELECT * FROM tags")
     fun getAllTags(): LiveData<List<DataBaseTag>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTags(tags: List<DataBaseTag>)
+
+    @Query("DELETE FROM tags")
+    fun deleteAll()
 }

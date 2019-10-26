@@ -4,19 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList.BoundaryCallback
-import com.example.kotlin_ex2.data.database.entities.DataBaseWhatsappGroup
 import com.example.kotlin_ex2.domain.WhatsappGroup
 import com.example.kotlin_ex2.network.RequestStatus
 import com.example.kotlin_ex2.network.models.ApiResponseListModel
 import com.example.kotlin_ex2.network.models.NetworkWhatsappGroup
-import com.example.kotlin_ex2.network.models.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 class AppBoundaryCallback(
     private val getPage: suspend (pageNumber: Int, query: Set<Long>) -> ApiResponseListModel<NetworkWhatsappGroup>,
-    private val insertPage: suspend (items: List<DataBaseWhatsappGroup>) -> Unit,
+    private val insertPage: suspend (items: List<NetworkWhatsappGroup>) -> Unit,
     private val beginPage: Int,
     private val coroutineScope: CoroutineScope
 ) : BoundaryCallback<WhatsappGroup>() {
@@ -50,7 +48,7 @@ class AppBoundaryCallback(
                     "Inserting page $pageNumber to database. (TOTAL OF ${networkResult.results.size} Results)."
                 )
 
-                insertPage(networkResult.results.asDatabaseModel())
+                insertPage(networkResult.results)
 
                 _networkStatus.value = RequestStatus.succeed()
                 currentPage++
@@ -58,7 +56,6 @@ class AppBoundaryCallback(
 
             } catch (t: Exception) {
 
-                Log.d("XXZZA", (t as retrofit2.HttpException).response().toString())
                 Log.d("XXZZA", t.message)
                 Log.d("XXZZA", noMoreResults.toString())
                 t.printStackTrace()
@@ -74,6 +71,7 @@ class AppBoundaryCallback(
     }
 
     fun setQuery(query: Set<Long>) {
+        this.query.clear()
         this.query.addAll(query)
         reset()
     }

@@ -3,7 +3,6 @@ package com.example.kotlin_ex2.ui.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -79,15 +78,7 @@ class MainActivity : DaggerAppCompatActivity(),
                 filterGroupDialog.addTagDescription(tagDescription)
             }
         })
-
-
-        mainViewModel.test.observe(this, Observer {
-            it.forEach { v ->
-                Log.d("CHECKX", v.toString())
-            }
-        })
     }
-
 
     private fun initUi() {
         main_FilterButtonLv.apply {
@@ -125,7 +116,6 @@ class MainActivity : DaggerAppCompatActivity(),
     }
 
     override fun tagsStateChanged(enabledItemIds: Set<Long>) {
-        Log.d("ZAINXXX", "STATE CHANGED $enabledItemIds")
         mainViewModel.setQuery(enabledItemIds)
     }
 

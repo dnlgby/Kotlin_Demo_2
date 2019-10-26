@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.example.kotlin_ex2.domain.Tag
 
 
-@Entity(tableName = "tag_table")
+@Entity(tableName = "tags")
 data class DataBaseTag(
     @PrimaryKey val id: Long,
     val name: String

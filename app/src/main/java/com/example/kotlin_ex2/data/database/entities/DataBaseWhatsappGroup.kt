@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.kotlin_ex2.domain.WhatsappGroup
 
-@Entity(tableName = "whatsapp_group_table")
+@Entity(tableName = "groups")
 data class DataBaseWhatsappGroup(
     @PrimaryKey val id: Long,
     val name: String,

@@ -14,19 +14,17 @@ class MainViewModel @Inject constructor(private val mainRepository: Repository) 
 
     val whatsappGroupsLiveData = MediatorLiveData<PagedList<WhatsappGroup>>()
     private var currentGroupSourceLiveData: LiveData<PagedList<WhatsappGroup>>? = null
+    private var allGroupSourceLiveData: LiveData<PagedList<WhatsappGroup>>? = null
 
     // In the beginning - Listen to the global source (This is a TEST ofc).
     init {
-        //setQuery(mutableSetOf(19))
-        //whatsappGroupsLiveData.addSource(mainRepository.whatsappGroupsLiveData) {
-        //    whatsappGroupsLiveData.value = it
-        // }
+        allGroupSourceLiveData = mainRepository.allGroupsLiveData
+        setAllDataQuery()
     }
 
     //val whatsappGroupsLiveData = mainRepository.whatsappGroupsLiveData
     val networkStateLiveData = mainRepository.networkStateLiveData
     val getTagsStatusLiveData = mainRepository.getAllTags()
-    val test = mainRepository.test
 
     // Add group status LiveData
     private val _addGroupStatusLiveData = MutableLiveData<Action<Nothing>>()
@@ -34,13 +32,29 @@ class MainViewModel @Inject constructor(private val mainRepository: Repository) 
         get() = _addGroupStatusLiveData
 
 
+    private fun setAllDataQuery() {
+        whatsappGroupsLiveData.addSource(allGroupSourceLiveData!!) {
+            whatsappGroupsLiveData.value = it
+        }
+    }
+
     fun setQuery(query: Set<Long>) {
+
         if (currentGroupSourceLiveData != null) whatsappGroupsLiveData.removeSource(
             currentGroupSourceLiveData!!
         )
-        currentGroupSourceLiveData = mainRepository.setQuery(query)
-        whatsappGroupsLiveData.addSource(currentGroupSourceLiveData!!) {
-            whatsappGroupsLiveData.value = it
+
+        if (allGroupSourceLiveData != null) whatsappGroupsLiveData.removeSource(
+            allGroupSourceLiveData!!
+        )
+
+        if (query.isEmpty()) setAllDataQuery()
+        else {
+
+            currentGroupSourceLiveData = mainRepository.setQuery(query)
+            whatsappGroupsLiveData.addSource(currentGroupSourceLiveData!!) {
+                whatsappGroupsLiveData.value = it
+            }
         }
     }
 
@@ -64,5 +78,6 @@ class MainViewModel @Inject constructor(private val mainRepository: Repository) 
         super.onCleared()
         mainRepository.clear()
     }
+
 
 }

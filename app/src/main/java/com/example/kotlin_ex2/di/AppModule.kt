@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.kotlin_ex2.common.Constants.Server.SERVER_BASE_URL
 import com.example.kotlin_ex2.data.database.AppDataBase
+import com.example.kotlin_ex2.data.database.DataBaseWhatsappGroupTagJoinDao
 import com.example.kotlin_ex2.data.database.TagDao
 import com.example.kotlin_ex2.data.database.WhatsappGroupDao
 import com.example.kotlin_ex2.network.WhatsappGroupApiService
@@ -61,6 +62,12 @@ class AppModule {
     @Provides
     fun provideWhatsappGroupDao(db: AppDataBase): WhatsappGroupDao {
         return db.whatsappGroupDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataBaseWhatsappGroupTagJoinDao(db: AppDataBase): DataBaseWhatsappGroupTagJoinDao {
+        return db.dataBaseWhatsappGroupTagJoinDao()
     }
 
 }
