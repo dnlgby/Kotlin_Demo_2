@@ -14,12 +14,15 @@ interface DataBaseWhatsappGroupTagJoinDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(dataBaseWhatsappGroupTagJoin: DataBaseWhatsappGroupTagJoin)
 
+    //           SELECT * FROM groups
+//           INNER JOIN groups_tags_join
+//           ON groups.id=groups_tags_join.whatsappGroupId
+//           WHERE groups_tags_join.tagId IN (:tagsIds)
+
     @Query(
         """
-           SELECT * FROM groups
-           INNER JOIN groups_tags_join
-           ON groups.id=groups_tags_join.whatsappGroupId
-           WHERE groups_tags_join.tagId IN (:tagsIds)
+            SELECT * FROM groups
+            WHERE EXISTS (SELECT * FROM groups_tags_join WHERE groups_tags_join.whatsappGroupId = groups.id AND groups_tags_join.tagId IN (:tagsIds))
            """
     )
     fun getGroupsByTags(tagsIds: Set<Long>): DataSource.Factory<Int, DataBaseWhatsappGroup>
